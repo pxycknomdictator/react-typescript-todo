@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import {
   ChildrenProp,
   Todo,
@@ -17,11 +18,17 @@ export const TodoContextProvider: FC<ChildrenProp> = ({ children }) => {
   const mainReducerFunction = (state: Todo[], action: ActionTypes): Todo[] => {
     switch (action.type) {
       case dispatchActions.add:
-        return state;
+        return [...state, action.payload];
       case dispatchActions.delete:
-        return state;
+        const removeTask: Todo[] = state.filter(
+          (task) => task.id !== action.payload
+        );
+        return removeTask;
       case dispatchActions.update:
-        return state;
+        const updateState = state.map((task) =>
+          task.id === action.payload.id ? { ...task, ...action.payload } : task
+        );
+        return updateState;
       default:
         return state;
     }
